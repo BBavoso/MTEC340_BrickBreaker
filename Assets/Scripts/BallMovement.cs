@@ -1,18 +1,30 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BallMovement : MonoBehaviour
 {
-    public float speed = 3.0f;
-    public float startingAngleSpread = 45;
+    [SerializeField] private float Speed = 3.0f;
+    [SerializeField] private float StartingAngleSpread = 45;
 
-    private Vector2 direction;
+    private Rigidbody2D _rb;
 
-    void Start() {
-        float angle = Random.Range(-startingAngleSpread, startingAngleSpread);
-        direction = Quaternion.Euler(0, 0, angle) * Vector3.down;
+    private void Start() {
+        _rb = GetComponent<Rigidbody2D>();
+
+        ResetBall();
+        
     }
 
-    void Update() {
-        transform.Translate(direction * (speed * Time.deltaTime));
+    private void ResetBall() {
+        transform.position = Vector2.zero;
+        
+        float angle = Random.Range(-StartingAngleSpread, StartingAngleSpread);
+        Vector2 direction = Quaternion.Euler(0, 0, angle) * Vector3.down;
+        _rb.linearVelocity = direction * Speed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other) {
+        ResetBall();
     }
 }
