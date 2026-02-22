@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameBehavior : MonoBehaviour {
     public static GameBehavior Instance;
@@ -9,6 +10,9 @@ public class GameBehavior : MonoBehaviour {
     [SerializeField] private TextMeshProUGUI ScoreText;
     [SerializeField] private TextMeshProUGUI LifeText;
     [SerializeField] private TextMeshProUGUI LoseText;
+    [SerializeField] private TextMeshProUGUI PauseText;
+
+    [SerializeField] private InputActionReference PauseGame;
 
     private int _score;
 
@@ -19,6 +23,8 @@ public class GameBehavior : MonoBehaviour {
 
     public int Lives { private set; get; }
 
+    public Utilities.GameState GameState;
+
     private void Awake() {
         if (Instance != null && Instance != this) {
             Destroy(gameObject);
@@ -26,11 +32,20 @@ public class GameBehavior : MonoBehaviour {
             Instance = this;
             DontDestroyOnLoad(gameObject);
         }
+
+        PauseGame.action.performed += _ => {
+            bool gamePlaying = GameState == Utilities.GameState.Playing;
+            GameState = gamePlaying
+                ? Utilities.GameState.Paused
+                : Utilities.GameState.Playing;
+            PauseText.gameObject.SetActive(gamePlaying);
+        };
     }
 
     private void Start() {
         Lives = 3;
-        
+        GameState = Utilities.GameState.Playing;
+
         SpawnBall();
         UpdateTextUI();
     }
@@ -55,6 +70,7 @@ public class GameBehavior : MonoBehaviour {
             LoseGame();
             return;
         }
+
         Invoke(nameof(SpawnBall), 3);
     }
 

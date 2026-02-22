@@ -14,6 +14,10 @@ public class PaddleMovement : MonoBehaviour
     }
 
     void FixedUpdate() {
-        _rb.linearVelocityX = move.action.ReadValue<float>() * moveSpeed;
+        if (GameBehavior.Instance.GameState == Utilities.GameState.Playing) {
+            _rb.linearVelocityX = move.action.ReadValue<float>() * moveSpeed;
+        } else {
+            _rb.linearVelocityX = 0;
+        }
     }
 }

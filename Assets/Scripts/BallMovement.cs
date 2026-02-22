@@ -15,6 +15,10 @@ public class BallMovement : MonoBehaviour {
 
         ResetBall();
     }
+    
+    private void FixedUpdate() {
+        _rb.simulated = GameBehavior.Instance.GameState == Utilities.GameState.Playing;
+    }
 
     private void ResetBall() {
         float angle = Random.Range(-StartingAngleSpread, StartingAngleSpread);
@@ -34,6 +38,13 @@ public class BallMovement : MonoBehaviour {
                                     PaddleInfluence * other.rigidbody.linearVelocity;
                 _rb.linearVelocity = direction.normalized * _rb.linearVelocity.magnitude;
             }
+            AudioController.Instance.PlayPaddleBounce();
+        } else if (other.transform.CompareTag("Brick")) {
+            // Don't play brick bounce, as the brick will play the sound based on health
+            // AudioController.Instance.PlayBrickBounce();
+        } else {
+            // Hitting Wall
+            AudioController.Instance.PlayWallBounce();
         }
 
         _rb.linearVelocity *= SpeedMultiplier;

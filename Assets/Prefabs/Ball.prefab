@@ -109,7 +109,7 @@ MonoBehaviour:
   Speed: 5
   StartingAngleSpread: 45
   PaddleInfluence: 0.4
-  SpeedMultiplier: 1.1
+  SpeedMultiplier: 1.02
 --- !u!50 &8958397591157487825
 Rigidbody2D:
   serializedVersion: 5
